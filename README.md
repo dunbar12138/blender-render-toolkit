@@ -6,10 +6,10 @@
 A Python-based toolkit for rendering high-quality images and videos of 3D objects using Blender, specifically designed for research projects.
 
 <p align="center">
-<video src="examples/rsc/avocado_full_color_rotate.mp4" autoplay muted loop width="20%"></video>
-<video src="examples/rsc/avocado_normal_rotate.mp4" autoplay muted loop width="20%"></video>
-<video src="examples/rsc/steel_helmet.mp4" autoplay muted loop width="20%"></video>
-<video src="examples/rsc/horse_saddle.mp4" autoplay muted loop width="20%"></video>
+<img src='examples/rsc/avocado_full_color_rotate.gif' width="20%">
+<img src='examples/rsc/avocado_normal_rotate.gif' width="20%">
+<img src='examples/rsc/steel_helmet.gif' width="20%">
+<img src='examples/rsc/horse_saddle.gif' width="20%">
 </p>
 
 ## Features
@@ -56,7 +56,7 @@ ffmpeg -y -i output/avocado_full_color_rotate/%4d.png -c:v libx264 -r 30 -pix_fm
 
 <p align="center">
 <img src="examples/rsc/avocado_full_color.png" width="40%">
-<video src="examples/rsc/avocado_full_color_rotate.mp4" controls width="40%"></video>
+<img src='examples/rsc/avocado_full_color_rotate.gif' width="40%">
 </p>
 
 #### Normal Map Rendering
@@ -73,7 +73,7 @@ ffmpeg -y -i output/avocado_normal_rotate/%4d.png -c:v libx264 -r 30 -pix_fmt yu
 
 <p align="center">
 <img src="examples/rsc/avocado_normal.png" width="40%">
-<video src="examples/rsc/avocado_normal_rotate.mp4" controls width="40%"></video>
+<img src='examples/rsc/avocado_normal_rotate.gif' width="40%">
 </p>
 
 ## Featured Projects
