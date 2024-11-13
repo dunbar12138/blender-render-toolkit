@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Define the lists of textures and indices
-mesh_objs=("a_beanie_1_GreenSweater_ours" "a_toy_flower_2_GreenSweater_ours" "a_miffy_bunny_GreenSweater_ours"  "a_mug_1_avocado_ours"  "a_phone_case_avocado_ours" "a_coffee_cup_ClothBag_ours" "a_coffee_cup_OrangeGlove_ours" "a_coffee_cup_cantaloupe_ours" "a_coffee_cup_GoldGoat_ours" "a_coffee_cup_Strawberry_ours" "a_chopping_board_CuttingBoard_ours" "a_cork_table_mat_CorkMat_ours" "a_corn_1_Corn_ours" "a_heat_resistant_glove_OrangeGlove_ours" "a_NFL_football_2_Football_ours" "a_potato_Potato_ours" "a_strawberry_Strawberry_ours" "an_orange_Orange_ours" "a_gold_goat_sculpture_GoldGoat_TableTennisHandle__multiparts_2_ours" "a_cactus_in_a_pot_3_Orange_OrangeGlove__multiparts_2_ours" "lamp1_ClothBag_MetalFrame__multiparts_2_ours")
+mesh_objs=("an_avocado_2_avocado_ours_TSDS")
+# ("a_beanie_1_GreenSweater_ours_TSDS" "a_toy_flower_2_GreenSweater_ours_TSDS" "a_miffy_bunny_GreenSweater_ours_TSDS" "a_mug_1_avocado_ours_TSDS" "a_phone_case_avocado_ours_TSDS" "a_coffee_cup_ClothBag_ours_TSDS" "a_coffee_cup_OrangeGlove_ours_TSDS" "a_coffee_cup_cantaloupe_ours_TSDS" "a_coffee_cup_GoldGoat_ours_TSDS" "a_coffee_cup_Strawberry_ours_TSDS" "a_chopping_board_CuttingBoard_ours_TSDS" "a_cork_table_mat_CorkMat_ours_TSDS" "a_corn_1_Corn_ours_TSDS" "a_heat_resistant_glove_OrangeGlove_ours_TSDS" "a_miffy_bunny_GreenSweater_ours_TSDS" "a_NFL_football_2_Football_ours_TSDS" "a_potato_Potato_ours_TSDS" "a_strawberry_Strawberry_ours_TSDS" "an_orange_Orange_ours_TSDS" "an_avocado_avocado_ours_TSDS" "a_cactus_in_a_pot_3_Orange_OrangeGlove_ours_TSDS" "a_gold_goat_sculpture_GoldGoat_TableTennisHandle_ours_TSDS" "lamp1_ClothBag_MetalFrame_ours_TSDS")  
+
 #  
 
 # Define the number of GPUs available
@@ -12,8 +14,9 @@ run_scripts() {
     local gpu_id=$1
     local obj=$2
 
-    ffmpeg -y -i blender/output/${obj}_full_color_rotate.mp4 -i blender/output/${obj}_normal_rotate.mp4 -filter_complex vstack -c:v libx264 -r 30 -pix_fmt yuv420p blender/output/${obj}_combined.mp4
+    ffmpeg -y -i output/${obj}_full_color_rotate.mp4 -i output/${obj}_normal_rotate.mp4 -filter_complex hstack -c:v libx264 -r 30 -pix_fmt yuv420p output/${obj}_hstack.mp4
 }
+# -filter_complex vstack
 
 for ((i=0; i<${#mesh_objs[@]}; i+=num_gpus)); do
     for ((j=0; j<num_gpus && i+j<${#mesh_objs[@]}; j++)); do

@@ -2,12 +2,13 @@ import bpy
 import math
 import sys, os
 import argparse
-from blender_material import Full_color_texture, normal_render_texture
+from blender_material import Full_color_texture, normal_render_texture, albedo_render_texture
+import pdb
 
 def parse_args():
     parser = argparse.ArgumentParser(description='Render an object with full color texture')
     parser.add_argument('--data_path', type=str, help='Path to the object data')
-    parser.add_argument('--texture_type', choices=['full_color', 'normal'], default='full_color', help='Type of texture to render')
+    parser.add_argument('--texture_type', choices=['full_color', 'normal', 'albedo'], default='full_color', help='Type of texture to render')
     parser.add_argument('--output_path', type=str, default='output', help='Path to save the rendered image')
     parser.add_argument('--start_rot_x', type=float, default=90, help='Start rotation in x-axis')
     parser.add_argument('--start_rot_z', type=float, default=0, help='Start rotation in z-axis')
@@ -39,7 +40,8 @@ def main():
     print(bpy.app.version_string)
     bpy.ops.wm.obj_import(filepath=os.path.join(data_path, f"{obj_name}.obj"))
 
-    obj_name = obj_name[:63] # MAX_NAME_LENGTH = 63
+    MAX_NAME_LENGTH = 63 # Maximum length of object name in Blender
+    obj_name = obj_name[:MAX_NAME_LENGTH]
     obj = bpy.data.objects[obj_name]
 
     # Scale the object (if you still want this after normalization)
@@ -50,7 +52,12 @@ def main():
     if args.normal_map != "":
         normal_map_name = os.path.join(data_path, args.normal_map)
     else:
+        # by default, load the tacitle normal map
         normal_map_name = os.path.join(data_path, f"{obj_name}_tactile_normal.png")
+        # check if the normal map exists. if not, set it to None
+        if not os.path.exists(normal_map_name):
+            print(f"Normal map {normal_map_name} does not exist. Set to None and render the geometry normal instead.")
+            normal_map_name = None
 
     if args.albedo_map != "":
         albedo_map_name = os.path.join(data_path, args.albedo_map)
@@ -89,7 +96,12 @@ def main():
         full_color_mat.use_nodes = True
         Full_color_texture(full_color_mat, albedo_map_name, normal_map_name)
         obj.material_slots[0].material = full_color_mat
-
+    elif args.texture_type == 'albedo':
+        albedo_mat = bpy.data.materials.new(name = "AlbedoMat")
+        albedo_mat.use_nodes = True
+        albedo_render_texture(albedo_mat, albedo_map_name)
+        obj.material_slots[0].material = albedo_mat
+    
     os.makedirs(f'config/', exist_ok=True)
     bpy.ops.wm.save_as_mainfile(filepath=f'config/{obj_name}_{args.texture_type}.blend')
     
