@@ -1,11 +1,13 @@
 #!/bin/bash
 
 # echo current directory
-echo "current directory: $(pwd)"
+echo "current directory: $(pwd)" # NOTE: run this script in directory "blender-render-toolkit"
 
 # Define the lists of textures and indices
-mesh_objs=("an_avocado_2_mesh")
+mesh_objs=("avocado")
 
+### Mesh objects used in TactileDreamFusion project ###
+### change --data_path from "examples/$obj" to "../logs/$obj" for the following objects if blender-render-toolkit is placed under TactileDreamFusion project ###
 # ("a_beanie_1_GreenSweater_ours_TSDS" "a_toy_flower_2_GreenSweater_ours_TSDS" "a_miffy_bunny_GreenSweater_ours_TSDS" "an_avocado_2_avocado_ours_TSDS" "a_mug_1_avocado_ours_TSDS" "a_phone_case_avocado_ours_TSDS" ≈ "a_coffee_cup_ClothBag_ours_TSDS" "a_coffee_cup_OrangeGlove_ours_TSDS" "a_coffee_cup_cantaloupe_ours_TSDS" "a_coffee_cup_GoldGoat_ours_TSDS" "a_coffee_cup_Strawberry_ours_TSDS" "a_chopping_board_CuttingBoard_ours_TSDS" "a_cork_table_mat_CorkMat_ours_TSDS" "a_corn_1_Corn_ours_TSDS" "a_heat_resistant_glove_OrangeGlove_ours_TSDS" "a_miffy_bunny_GreenSweater_ours_TSDS" "a_NFL_football_2_Football_ours_TSDS" "a_potato_Potato_ours_TSDS" "a_strawberry_Strawberry_ours_TSDS" "an_orange_Orange_ours_TSDS" "an_avocado_avocado_ours_TSDS" "a_cactus_in_a_pot_3_Orange_OrangeGlove_ours_TSDS" "a_gold_goat_sculpture_GoldGoat_TableTennisHandle_ours_TSDS" "lamp1_ClothBag_MetalFrame_ours_TSDS")
 
 
@@ -20,16 +22,13 @@ run_scripts() {
     echo "Running script: $obj on GPU: $gpu_id"
     mkdir output
     mkdir output/${obj}_albedo_rotate
-    # CUDA_VISIBLE_DEVICES=$gpu_id python blender_obj_uv_albedo.py --data_path ../logs/$obj --rotate_video --texture_type albedo > output/${obj}_albedo_rotate/rotate_video.log
 
-    # # specific rotating angle for avocado example
-    # CUDA_VISIBLE_DEVICES=$gpu_id python blender_obj_uv_normal.py --data_path ../logs/$obj --start_rot_x 75 --rotate_video --texture_type albedo > output/${obj}_full_color_rotate/rotate_video.log
+    # NOTE: remove "--start_rot_x 75" or set to other apporiate angles for different mesh objects
 
-    # ffmpeg -y -i  output/${obj}_albedo_rotate/%4d.png -c:v libx264 -r 30 -pix_fmt yuv420p output/${obj}_albedo_rotate.mp4
+    CUDA_VISIBLE_DEVICES=$gpu_id python blender_obj_uv_normal.py --data_path examples/$obj --start_rot_x 75 --rotate_video --texture_type albedo > output/${obj}_albedo_rotate/rotate_video.log
 
-    # Test single-frame renderning for "non-ours" method
-    # we manually specify the albedo map's name since it doesn't follow our convention of naming
-    CUDA_VISIBLE_DEVICES=$gpu_id python blender_obj_uv_normal.py --data_path ../logs/$obj --start_rot_x 75 --texture_type albedo --albedo_map "an_avocado_2_mesh.png" > output/${obj}_albedo_rotate/single_frame.log
+    ffmpeg -y -i  output/${obj}_albedo_rotate/%4d.png -c:v libx264 -r 30 -pix_fmt yuv420p output/${obj}_albedo_rotate.mp4
+
 }
 
 for ((i=0; i<${#mesh_objs[@]}; i+=num_gpus)); do

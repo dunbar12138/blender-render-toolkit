@@ -15,10 +15,9 @@ def parse_args():
 
 # swipe screen function, per frame
 def lin_brush(col_g, color, t, shift=1/6):
-    # NOTE: add a shift so the sliding window effect starts from the middle
-    t = t + shift 
-    t = t - 1 if t > 1 else t
-    t = np.sin(t*np.pi)
+    # Ref: https://github.com/gengshan-y/rac/blob/0a5d4cca5037247228f6c2dd4a31d0e97de1ec89/explore.py#L268
+    # NOTE: add a shift so the sliding window effect starts from the middle)
+    t = np.sin((t + shift - (t + shift > 1)) * np.pi)
     imgw = col_g.shape[1]
     wpx = int(t*imgw)
     img_new = np.zeros_like(color)

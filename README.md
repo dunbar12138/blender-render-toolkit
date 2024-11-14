@@ -76,6 +76,53 @@ ffmpeg -y -i output/avocado_normal_rotate/%4d.png -c:v libx264 -r 30 -pix_fmt yu
 <img src='examples/rsc/avocado_normal_rotate.gif' width="40%">
 </p>
 
+> **Note**: Add `--normal_map "None"` flag to render the base geometry normal without tactile textures
+<p align="center">
+<img src="examples/rsc/avocado_normal_geometry.png" width="40%">
+<img src='examples/rsc/avocado_normal.png' width="40%">
+</p>
+
+
+#### Albedo Map Rendering
+
+```bash
+# Render a 360° rotating video (x-rotation: 75°)
+CUDA_VISIBLE_DEVICES=0 python blender_obj_uv_normal.py --data_path ./examples/avocado --start_rot_x 75 --rotate_video --texture_type albedo
+
+# Use ffmpeg to convert images to a video
+ffmpeg -y -i  output/avocado_albedo_rotate/%4d.png -c:v libx264 -r 30 -pix_fmt yuv420p output/avocado_albedo_rotate.mp4
+```
+
+> **Note**: Remove the `--rotate_video` flag to render a single frame instead of a video sequence.
+
+<p align="center">
+<img src="examples/rsc/avocado_albedo.png" width="40%">
+<img src='examples/rsc/avocado_albedo_rotate.gif' width="40%">
+</p>
+
+
+### 2. After rendering rotating views, create a video to visualize two modalities side by side with swiping effect
+
+Example usage:
+```bash
+CUDA_VISIBLE_DEVICES=0 python swipe_window_freeze.py --obj_name avocado
+ffmpeg -y -i  output/avocado_combined_swipe/%4d.png -c:v libx264 -r 30 -pix_fmt yuv420p output/avocado_combined_swipe.mp4
+```
+
+<p align="center">
+<img src="examples/rsc/avocado_combined_swipe.gif" width="40%">
+</p>
+
+### 3. Batch process multiple object meshes
+Example usage:
+```bash
+bash scripts/batch_blender.sh
+```
+> **Note**: 
+* remove `--start_rot_x 75` or set to other apporiate rotation angles for different meshes
+* update `data_path` when necessary
+
+
 ## Featured Projects
 
 Projects that have successfully used this toolkit:

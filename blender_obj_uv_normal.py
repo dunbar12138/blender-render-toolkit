@@ -15,6 +15,7 @@ def parse_args():
     parser.add_argument('--rotate_video', action='store_true', help='Rotate the object in the video')
     parser.add_argument('--albedo_map', type=str, default="", help='Path to the albedo map')
     parser.add_argument('--normal_map', type=str, default="", help='Path to the normal map')
+    parser.add_argument('--postfix', type=str, default="", help='customizable postfix for the output file')
     return parser.parse_args()
 
 def main():
@@ -50,7 +51,11 @@ def main():
     bpy.ops.transform.resize(value=(2.0, 2.0, 2.0))
 
     if args.normal_map != "":
-        normal_map_name = os.path.join(data_path, args.normal_map)
+        if args.normal_map == "None":
+            print("Normal map set to None. Render the geometry normal instead.")
+            normal_map_name = None # render geometry normal without tactile normal map
+        else:
+            normal_map_name = os.path.join(data_path, args.normal_map)
     else:
         # by default, load the tacitle normal map
         normal_map_name = os.path.join(data_path, f"{obj_name}_tactile_normal.png")
@@ -110,15 +115,15 @@ def main():
         bpy.context.scene.frame_set(0)
 
         bpy.context.scene.render.image_settings.file_format = 'PNG'
-        bpy.context.scene.render.filepath = os.path.join(args.output_path, f'{obj_name}_{args.texture_type}.png')
+        bpy.context.scene.render.filepath = os.path.join(args.output_path, f'{obj_name}_{args.texture_type}{args.postfix}.png')
         os.makedirs(f'{args.output_path}', exist_ok=True)
         bpy.ops.render.render(write_still=True)
     else:
         # Render the animation
         bpy.context.scene.render.image_settings.file_format = 'PNG'
-        bpy.context.scene.render.filepath = os.path.join(args.output_path, f'{obj_name}_{args.texture_type}_rotate/')
+        bpy.context.scene.render.filepath = os.path.join(args.output_path, f'{obj_name}_{args.texture_type}{args.postfix}_rotate/')
 
-        os.makedirs(os.path.join(args.output_path, f'{obj_name}_full_color_rotate/'), exist_ok=True)
+        os.makedirs(os.path.join(args.output_path, f'{obj_name}_{args.texture_type}{args.postfix}_rotate/'), exist_ok=True)
         bpy.ops.render.render(animation=True)
 
         # Use ffmpeg to convert the images to a video
