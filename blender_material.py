@@ -75,7 +75,6 @@ def Full_color_texture(mat, albedo_texture_file, tactile_texture_file):
 # mat.use_nodes = True
 #initialize normal_render node group
 def normal_render_texture(mat, tactile_texture_file):
-
 	normal_render = mat.node_tree
 	#start with a clean node tree
 	for node in normal_render.nodes:
@@ -148,8 +147,6 @@ def normal_render_texture(mat, tactile_texture_file):
 	mapping.inputs[3].default_value = (2.0, 2.0, -2.0)
 	
 	
-	
-	
 	#Set locations
 	image_texture_001.location = (-658.6141967773438, 372.88507080078125)
 	gamma.location = (420.29791259765625, 367.7361145019531)
@@ -179,3 +176,40 @@ def normal_render_texture(mat, tactile_texture_file):
 	normal_render.links.new(mapping.outputs[0], gamma.inputs[0])
 	return normal_render
 
+
+def albedo_render_texture(mat, albedo_texture_file):
+	albedo_render = mat.node_tree
+	# Start with a clean node tree
+	for node in albedo_render.nodes:
+		albedo_render.nodes.remove(node)
+	
+	# Initialize nodes
+	#node Albedo Map
+	image_texture = albedo_render.nodes.new("ShaderNodeTexImage")
+	image_texture.label = "albedo"
+	image_texture.name = "Image Texture"
+	image_texture.extension = 'REPEAT'
+	image_texture.interpolation = 'Linear'
+	image_texture.image = bpy.data.images.load(albedo_texture_file)
+
+	#node Emission
+	emission = albedo_render.nodes.new("ShaderNodeEmission")
+	emission.name = "Emission"
+	emission.inputs['Strength'].default_value = 1.0
+	
+	#node Material Output
+	material_output = albedo_render.nodes.new("ShaderNodeOutputMaterial")
+	material_output.name = "Material Output"
+	material_output.is_active_output = True
+	
+	# Node locations
+	image_texture.location = (-480, 300)
+	emission.location = (150, 300)
+	material_output.location = (430, 300)
+	
+	# Create links
+	albedo_render.links.new(image_texture.outputs['Color'], emission.inputs['Color'])
+	albedo_render.links.new(emission.outputs['Emission'], material_output.inputs['Surface'])
+	
+	return albedo_render
+	
