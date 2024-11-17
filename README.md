@@ -77,11 +77,17 @@ ffmpeg -y -i output/avocado_normal_rotate/%4d.png -c:v libx264 -r 30 -pix_fmt yu
 </p>
 
 > **Note**: Add `--normal_map "None"` flag to render the base geometry normal without tactile textures
+
 <p align="center">
 <img src="examples/rsc/avocado_normal_geometry.png" width="40%">
 <img src='examples/rsc/avocado_normal.png' width="40%">
 </p>
 
+> **Note**: Add `--disable_shadow` flag to render without the casted shadow
+
+<p align="center">
+<img src="examples/rsc/avocado_normal_no_shadow.png" width="40%">
+</p>
 
 #### Albedo Map Rendering
 
@@ -100,10 +106,10 @@ ffmpeg -y -i  output/avocado_albedo_rotate/%4d.png -c:v libx264 -r 30 -pix_fmt y
 <img src='examples/rsc/avocado_albedo_rotate.gif' width="40%">
 </p>
 
-
 ### 2. After rendering rotating views, create a video to visualize two modalities side by side with swiping effect
 
 Example usage:
+
 ```bash
 CUDA_VISIBLE_DEVICES=0 python swipe_window_freeze.py --obj_name avocado
 ffmpeg -y -i  output/avocado_combined_swipe/%4d.png -c:v libx264 -r 30 -pix_fmt yuv420p output/avocado_combined_swipe.mp4
@@ -114,14 +120,17 @@ ffmpeg -y -i  output/avocado_combined_swipe/%4d.png -c:v libx264 -r 30 -pix_fmt 
 </p>
 
 ### 3. Batch process multiple object meshes
+
 Example usage:
+
 ```bash
 bash scripts/batch_blender.sh
 ```
-> **Note**: 
-* remove `--start_rot_x 75` or set to other apporiate rotation angles for different meshes
-* update `data_path` when necessary
 
+> **Note**:
+
+- remove `--start_rot_x 75` or set to other apporiate rotation angles for different meshes
+- update `data_path` when necessary
 
 ## Featured Projects
 

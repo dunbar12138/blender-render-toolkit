@@ -16,6 +16,7 @@ def parse_args():
     parser.add_argument('--albedo_map', type=str, default="", help='Path to the albedo map')
     parser.add_argument('--normal_map', type=str, default="", help='Path to the normal map')
     parser.add_argument('--postfix', type=str, default="", help='customizable postfix for the output file')
+    parser.add_argument('--disable_shadow', action='store_true', help='Disable shadow')
     return parser.parse_args()
 
 def main():
@@ -37,15 +38,16 @@ def main():
 
     print(data_path, obj_name)
 
-    # Check bpy's version
-    print(bpy.app.version_string)
     bpy.ops.wm.obj_import(filepath=os.path.join(data_path, f"{obj_name}.obj"))
 
     MAX_NAME_LENGTH = 63 # Maximum length of object name in Blender
     obj_name = obj_name[:MAX_NAME_LENGTH]
     obj = bpy.data.objects[obj_name]
 
-    # Scale the object (if you still want this after normalization)
+    if args.disable_shadow: # Disable shadow, usually for normal rendering
+        obj.visible_shadow = False
+
+    # Scale the object
     bpy.ops.object.select_all(action='DESELECT')
     obj.select_set(True)
     bpy.ops.transform.resize(value=(2.0, 2.0, 2.0))
