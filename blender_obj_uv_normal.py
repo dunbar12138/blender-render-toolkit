@@ -8,13 +8,14 @@ import pdb
 def parse_args():
     parser = argparse.ArgumentParser(description='Render an object with full color texture')
     parser.add_argument('--data_path', type=str, help='Path to the object data')
-    parser.add_argument('--texture_type', choices=['full_color', 'normal', 'albedo'], default='full_color', help='Type of texture to render')
+    parser.add_argument('--texture_type', choices=['full_color', 'normal', 'albedo', 'label'], default='full_color', help='Type of texture to render')
     parser.add_argument('--output_path', type=str, default='output', help='Path to save the rendered image')
     parser.add_argument('--start_rot_x', type=float, default=90, help='Start rotation in x-axis')
     parser.add_argument('--start_rot_z', type=float, default=0, help='Start rotation in z-axis')
     parser.add_argument('--rotate_video', action='store_true', help='Rotate the object in the video')
     parser.add_argument('--albedo_map', type=str, default="", help='Path to the albedo map')
     parser.add_argument('--normal_map', type=str, default="", help='Path to the normal map')
+    parser.add_argument('--label_map', type=str, default="", help='Path to the label map')
     parser.add_argument('--postfix', type=str, default="", help='customizable postfix for the output file')
     return parser.parse_args()
 
@@ -69,6 +70,12 @@ def main():
     else:
         albedo_map_name = os.path.join(data_path, f"{obj_name}_albedo.png")
 
+    if args.label_map != "":
+        label_map_name = os.path.join(data_path, args.label_map)
+    else:
+        # used modified version with consistent color with the text prompt
+        label_map_name = os.path.join(data_path, f"{obj_name}_label_map_modified.png")
+
     bpy.context.scene.frame_start = 0
     bpy.context.scene.frame_end = 250
     bpy.context.scene.frame_step = 1
@@ -106,6 +113,12 @@ def main():
         albedo_mat.use_nodes = True
         albedo_render_texture(albedo_mat, albedo_map_name)
         obj.material_slots[0].material = albedo_mat
+    elif args.texture_type == 'label':
+        # Render the label map for multi-part objects (e.g. cactus in a pot) for TactileDreamFusion project. Can be customized to render any user-specific texture map.
+        label_map_mat = bpy.data.materials.new(name = "AlbedoMat")
+        label_map_mat.use_nodes = True
+        albedo_render_texture(label_map_mat, label_map_name)
+        obj.material_slots[0].material = label_map_mat
     
     os.makedirs(f'config/', exist_ok=True)
     bpy.ops.wm.save_as_mainfile(filepath=f'config/{obj_name}_{args.texture_type}.blend')
