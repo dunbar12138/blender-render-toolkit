@@ -129,7 +129,7 @@ bash scripts/batch_blender.sh
 
 > **Note**:
 
-- remove `--start_rot_x 75` or set to other apporiate rotation angles for different meshes
+- remove `--start_rot_x 75` or set to other appropriate rotation angles for different meshes
 - update `data_path` when necessary
 
 ## Featured Projects
@@ -137,6 +137,7 @@ bash scripts/batch_blender.sh
 Projects that have successfully used this toolkit:
 
 - [FlashTex](https://flashtex.github.io/)
+- [TactileDreamFusion](https://github.com/RuihanGao/TactileDreamFusion/tree/main?tab=readme-ov-file)
 
 ## References and related works
 
