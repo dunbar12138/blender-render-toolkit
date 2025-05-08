@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import bpy
 import math
 import sys, os
@@ -68,7 +70,7 @@ def main():
     bpy.context.preferences.addons["cycles"].preferences.compute_device_type = "CUDA"
 
     # Open the .blend
-    bpy.ops.wm.open_mainfile(filepath="load/studio_bg_static.blend")
+    bpy.ops.wm.open_mainfile(filepath=str(Path(__file__).parent / "load/studio_bg_static.blend"))
 
     # Load the obj
     data_path = args.data_path
@@ -159,7 +161,7 @@ def main():
         obj.material_slots[0].material = albedo_mat
 
     os.makedirs(f"config/", exist_ok=True)
-    bpy.ops.wm.save_as_mainfile(filepath=f"config/{obj_name}_{args.texture_type}.blend")
+    bpy.ops.wm.save_as_mainfile(filepath=str(Path(__file__).parent / f"config/{obj_name}_{args.texture_type}.blend"))
 
     if not args.rotate_video:
         # Render the first frame
