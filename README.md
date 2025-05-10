@@ -12,6 +12,14 @@ A Python-based toolkit for rendering high-quality images and videos of 3D object
 <img src='examples/rsc/horse_saddle.gif' width="20%">
 </p>
 
+## Featured Projects
+
+Projects that have successfully used this toolkit:
+
+- [FlashTex](https://flashtex.github.io/)
+- [TactileDreamFusion](https://ruihangao.github.io/TactileDreamFusion/)
+- [LegoGPT](https://avalovelace1.github.io/LegoGPT/)
+
 ## Features
 
 - Simple command-line interface for headless rendering
@@ -131,13 +139,6 @@ bash scripts/batch_blender.sh
 
 - remove `--start_rot_x 75` or set to other appropriate rotation angles for different meshes
 - update `data_path` when necessary
-
-## Featured Projects
-
-Projects that have successfully used this toolkit:
-
-- [FlashTex](https://flashtex.github.io/)
-- [TactileDreamFusion](https://github.com/RuihanGao/TactileDreamFusion/tree/main?tab=readme-ov-file)
 
 ## References and related works
 
